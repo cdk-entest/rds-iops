@@ -13,7 +13,7 @@ import names
 # parameter
 NUM_ROW = 1000
 CHUNK_SIZE = 100
-NUM_THREAD_WORKER = 20
+NUM_THREAD_WORKER = 100
 
 
 with open("config.json", "r", encoding="utf-8") as file:
@@ -21,7 +21,6 @@ with open("config.json", "r", encoding="utf-8") as file:
 
 
 def get_connect():
-    print(f"get connect {current_thread().name}")
     conn = mysql.connector.connect(
         host=config["ENDPOINT"],
         user=config["USER"],
@@ -110,9 +109,9 @@ def write_to_table(start_idx = 1):
     # get connection
     conn = get_connect()
     conn.autocommit = True
-    print(f"thread {current_thread().name} {conn}")
+    print(f"thread {current_thread().name} connect {conn}")
     cursor = conn.cursor()
-    print(f"thread {current_thread().name} {cursor}")
+    print(f"thread {current_thread().name} cursor {cursor}")
     # time stamp
     now = datetime.datetime.now()
     time_stamp = now.strftime("%Y/%m/%d-%H:%M:%S.%f")
@@ -148,21 +147,7 @@ def thread_load_write_test():
             print(f"submit {k} thread")
             executor.submit(write_to_table, k*NUM_ROW+1)
 
-
-def threading_load_write_test():
-    for k in range(NUM_THREAD_WORKER):
-        t = threading.Thread(target=write_to_table, args=(k*NUM_ROW+1,))
-        t.setDaemon(True)
-        t.start()
-    
-    main_thread = threading.currentThread()
-    for t in threading.enumerate():
-        if t is main_thread:
-            continue
-        t.join()
-
 if __name__ == "__main__":
     create_table()
     thread_load_write_test()
-    # threading_load_write_test()
     # fetch_data()
