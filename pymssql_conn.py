@@ -2,13 +2,13 @@
 # connect to rds mycrosoft sql 
 # enable fish shell first
 
+import json
 import pymssql
-import json 
 
 with open('config.json', 'r', encoding='utf-8') as file:
     config = json.load(file)
 
-# connection 
+# connection
 conn = pymssql.connect(
     server= config['ENDPOINT'],
     port= config['PORT'],
