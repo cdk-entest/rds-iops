@@ -3,14 +3,18 @@
 import datetime
 import json
 import uuid
+import logging as logger
 from concurrent.futures import ThreadPoolExecutor
 from threading import current_thread
 import mysql.connector
 
+# 
+logger.basicConfig(level=logger.DEBUG)
+
 # parameter
-NUM_ROW = 1000
-CHUNK_SIZE = 100
-NUM_THREAD_WORKER = 100
+NUM_ROW = 100
+CHUNK_SIZE = 10
+NUM_THREAD_WORKER = 1
 
 
 with open("config.json", "r", encoding="utf-8") as file:
@@ -64,7 +68,7 @@ def fetch_data():
     cur = conn.cursor()
     #
     stmt_select = (
-        "SELECT id, name, age, time FROM employees ORDER BY id"
+        "SELECT * FROM mytesttable"
     )
     cur.execute(stmt_select)
     # parse
@@ -104,7 +108,43 @@ def thread_load_write_test():
             print(f"submit {k} thread")
             executor.submit(write_to_table)
 
+
+
+def run_mysql(workload):
+    """thread worker function"""
+    # Connect to the database
+    db = get_connect()
+    db.autocommit = True
+    cursor = db.cursor()
+    if workload == 'insert':
+        sql = "INSERT INTO myschema.mytesttable (id_pk,random_string,random_number,reverse_string,row_ts) " \
+              "VALUES(replace(uuid(),'-',''),concat(replace(uuid(),'-',''), replace(convert(rand(), char), '.', ''), " \
+              "replace(convert(rand(), char), '.', '')),rand(),reverse(concat(replace(uuid(),'-',''), " \
+              "replace(convert(rand(), char), '.', ''), replace(convert(rand(), char), '.', ''))),current_timestamp)"
+        logger.debug('statement being issued %s', sql)
+    else:
+        workload = 'query'
+        sql = "SELECT COUNT(*) as result_value FROM myschema.mytesttable"
+        logger.debug('executing %s', sql)
+
+    for i in range (NUM_ROW):
+        cursor.execute(sql)
+        if workload == 'query':
+            row = cursor.fetchall()
+            logger.debug(f"fetched rows {row}")
+        # commit the rows periodically
+        # write out a message indicating that progress is being made
+        if i % CHUNK_SIZE == 0:
+            logger.debug("completed %s executions and commit", str(i))
+            db.commit()
+    # commit the outstanding rows
+    db.commit()
+    db.close()
+    return
+
+
 if __name__ == "__main__":
-    create_table()
-    thread_load_write_test()
-    #fetch_data()
+   # create_table()
+   # thread_load_write_test()
+#   fetch_data()
+    run_mysql(workload='insert')
