@@ -12,9 +12,9 @@ import mysql.connector
 logger.basicConfig(level=logger.DEBUG)
 
 # parameter
-NUM_ROW = 100
-CHUNK_SIZE = 10
-NUM_THREAD_WORKER = 1
+NUM_ROW = 1000
+CHUNK_SIZE = 100
+NUM_THREAD_WORKER = 10
 
 
 with open("config.json", "r", encoding="utf-8") as file:
@@ -101,19 +101,12 @@ def write_to_table():
     conn.close()
 
 
-
-def thread_load_write_test():
-    with ThreadPoolExecutor(max_workers=NUM_THREAD_WORKER) as executor:
-        for k in range(1, NUM_THREAD_WORKER+1):
-            print(f"submit {k} thread")
-            executor.submit(write_to_table)
-
-
-
 def run_mysql(workload):
     """thread worker function"""
     # Connect to the database
     db = get_connect()
+    # 
+    print(f"{current_thread().name} connect {db}")
     db.autocommit = True
     cursor = db.cursor()
     if workload == 'insert':
@@ -121,7 +114,7 @@ def run_mysql(workload):
               "VALUES(replace(uuid(),'-',''),concat(replace(uuid(),'-',''), replace(convert(rand(), char), '.', ''), " \
               "replace(convert(rand(), char), '.', '')),rand(),reverse(concat(replace(uuid(),'-',''), " \
               "replace(convert(rand(), char), '.', ''), replace(convert(rand(), char), '.', ''))),current_timestamp)"
-        logger.debug('statement being issued %s', sql)
+       # logger.debug('statement being issued %s', sql)
     else:
         workload = 'query'
         sql = "SELECT COUNT(*) as result_value FROM myschema.mytesttable"
@@ -135,7 +128,7 @@ def run_mysql(workload):
         # commit the rows periodically
         # write out a message indicating that progress is being made
         if i % CHUNK_SIZE == 0:
-            logger.debug("completed %s executions and commit", str(i))
+            logger.debug(f"{current_thread().name} commit {i}")
             db.commit()
     # commit the outstanding rows
     db.commit()
@@ -143,8 +136,15 @@ def run_mysql(workload):
     return
 
 
+def thread_load_write_test():
+    with ThreadPoolExecutor(max_workers=NUM_THREAD_WORKER) as executor:
+        for k in range(1, NUM_THREAD_WORKER+1):
+            print(f"submit {k} thread")
+            executor.submit(run_mysql, "insert")
+
+
+
 if __name__ == "__main__":
    # create_table()
-   # thread_load_write_test()
-#   fetch_data()
-    run_mysql(workload='insert')
+   thread_load_write_test()
+   # fetch_data()
