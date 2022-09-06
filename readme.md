@@ -4,6 +4,15 @@
 - load data.csv into a table
 
 ## Connect 
+install mysql client and connect 
+```bash 
+sudo yum install mariadb
+```
+and check 
+```bash 
+mysql --version
+```
+then connect with endpoint, and username and then provide password when asked 
 ```bash 
 mysql -h mysql–instance1.123456789012.us-east-1.rds.amazonaws.com -P 3306 -u mymasteruser -p
 ```
