@@ -1,6 +1,6 @@
 # haimtran 05 SEP 2022
 # rds mysql iops
-
+import datetime
 import json
 import uuid
 from concurrent.futures import ThreadPoolExecutor
@@ -41,9 +41,9 @@ def create_table() -> None:
     # create table
     employee_table = (
         "CREATE TABLE employees ("
-        "    id VARCHAR(30) UNIQUE, "
-        "    name VARCHAR(30) DEFAULT '' NOT NULL, "
-        "    age TEXT, "
+        "    id VARCHAR(36) UNIQUE, "
+        "    name VARCHAR(200) DEFAULT '' NOT NULL, "
+        "    age INT, "
         "    time TEXT, "
         "PRIMARY KEY (id))"
     )
@@ -88,7 +88,7 @@ def write_to_table():
     for k in range(NUM_ROW):
         print(f"{current_thread().name} insert item {k}")
         stmt_insert = "INSERT INTO employees (id, name, age, time) VALUES (%s, %s, %s, %s)"
-        cursor.execute(stmt_insert, (str(uuid.uuid4()), 'haitran', 30, '100'))
+        cursor.execute(stmt_insert, (str(uuid.uuid4()), f"{str(uuid.uuid4())}-{str(uuid.uuid4())}", 30, datetime.datetime.now().strftime('%Y-%M-%D-%H-%M-%S')))
         if k % CHUNK_SIZE == 0: 
             print(f"{current_thread().name} commit chunk {k // CHUNK_SIZE}")
             conn.commit()
