@@ -12,9 +12,9 @@ import mysql.connector
 logger.basicConfig(level=logger.DEBUG)
 
 # parameter
-NUM_ROW = 1000
+NUM_ROW = 10000
 CHUNK_SIZE = 100
-NUM_THREAD_WORKER = 10
+NUM_THREAD_WORKER = 100
 
 
 with open("config.json", "r", encoding="utf-8") as file:
@@ -114,7 +114,7 @@ def run_mysql(workload):
               "VALUES(replace(uuid(),'-',''),concat(replace(uuid(),'-',''), replace(convert(rand(), char), '.', ''), " \
               "replace(convert(rand(), char), '.', '')),rand(),reverse(concat(replace(uuid(),'-',''), " \
               "replace(convert(rand(), char), '.', ''), replace(convert(rand(), char), '.', ''))),current_timestamp)"
-       # logger.debug('statement being issued %s', sql)
+        logger.debug('statement being issued %s', sql)
     else:
         workload = 'query'
         sql = "SELECT COUNT(*) as result_value FROM myschema.mytesttable"
