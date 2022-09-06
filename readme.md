@@ -17,32 +17,7 @@ then connect with endpoint, and username and then provide password when asked
 ```bash 
 mysql -h mysql–instance1.123456789012.us-east-1.rds.amazonaws.com -P 3306 -u mymasteruser -p
 ```
-basic sql 
-show databases 
-```sql 
-show databases; 
-```
-show tables 
-```sql
-use mydb; 
-show tables; 
-```
-query a table 
-```sql
-select * from employess limit 10; 
-```
-insert 
-```sqs
-insert into employees (id, name, age, time) values  ('haimtran001', 'haimtran', 30, '2022-49-09/06/22-03-49-38');
-```
-query 
-```sql
-select * from employees where id='haimtran001'; 
-```
-drop table 
-```sql
-drop table employees; 
-```
+then run the schmea.sql to create table and index with intensive io pattern 
 
 ## Experiment
 db.m6l.large 2vCPU 8GB 20GB GP2 
@@ -52,6 +27,33 @@ db.m6l.large 2vCPU 8GB provisioned 3000 IOPS and 100GB SSD
 
 
 db.m5.4xlarge 16vCPU 64GB provisioned 3000 IOPS and 400GB SSD 
+
+
+## Troubleshooting 
+basic sql show databases 
+```sql
+show databases; 
+```
+
+show tables 
+```sql 
+show tables; 
+```
+
+query a table 
+```sql 
+select * from employess limit 10; 
+```
+
+insert 
+```sql 
+insert into employees (id, name, age, time) values  ('haimtran001', 'haimtran', 30, '2022-49-09/06/22-03-49-38');
+```
+
+drop table 
+```sql
+drop table employess; 
+```
 
 
 ## Reference 
