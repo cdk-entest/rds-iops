@@ -15,7 +15,7 @@ mysql --version
 ```
 then connect with endpoint, and username and then provide password when asked 
 ```bash 
-mysql -h mysql–instance1.123456789012.us-east-1.rds.amazonaws.com -P 3306 -u mymasteruser -p
+mysql -h $ENDPOINT -P 3306 -u $USER -p
 ```
 then run the schmea.sql to create table and index with intensive io pattern 
 
