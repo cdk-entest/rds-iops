@@ -4,9 +4,8 @@
 import datetime
 import random
 import json
-import threading
 from concurrent.futures import ThreadPoolExecutor
-from threading import current_thread, main_thread
+from threading import current_thread
 import mysql.connector
 import names
 
@@ -99,7 +98,7 @@ def drop_table() -> None:
     drop = "DROP TABLE IF EXISTS employees"
     # execute
     cur.execute(drop)
-    # close connection 
+    # close connection
     cur.close()
     conn.close()
     print("DELETED TABLE")
