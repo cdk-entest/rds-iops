@@ -4,7 +4,7 @@
 - load data.csv into a table
 - intensive io schema [here](https://github.com/aws-samples/specialty-practice-code-samples/blob/master/choose-between-gp2-and-io1/mysql-create-table.sql)
 
-## Connect 
+## Setup and Connect 
 install mysql client and connect 
 ```bash 
 sudo yum install mariadb
