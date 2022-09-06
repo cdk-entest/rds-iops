@@ -2,6 +2,7 @@
 # rds mysql iops
 
 import json
+import uuid
 from concurrent.futures import ThreadPoolExecutor
 from threading import current_thread
 import mysql.connector
@@ -9,7 +10,7 @@ import mysql.connector
 # parameter
 NUM_ROW = 1000
 CHUNK_SIZE = 100
-NUM_THREAD_WORKER = 1
+NUM_THREAD_WORKER = 100
 
 
 with open("config.json", "r", encoding="utf-8") as file:
@@ -40,7 +41,7 @@ def create_table() -> None:
     # create table
     employee_table = (
         "CREATE TABLE employees ("
-        "    id INT UNSIGNED NOT NULL AUTO_INCREMENT, "
+        "    id VARCHAR(30) UNIQUE, "
         "    name VARCHAR(30) DEFAULT '' NOT NULL, "
         "    age TEXT, "
         "    time TEXT, "
@@ -77,7 +78,7 @@ def fetch_data():
     return items
 
 
-def write_to_table(start_idx = 1):
+def write_to_table():
     # get connection
     conn = get_connect()
     conn.autocommit = True
@@ -87,7 +88,7 @@ def write_to_table(start_idx = 1):
     for k in range(NUM_ROW):
         print(f"{current_thread().name} insert item {k}")
         stmt_insert = "INSERT INTO employees (id, name, age, time) VALUES (%s, %s, %s, %s)"
-        cursor.execute(stmt_insert, (k+start_idx, 'haitran', 30, '100'))
+        cursor.execute(stmt_insert, (str(uuid.uuid4()), 'haitran', 30, '100'))
         if k % CHUNK_SIZE == 0: 
             print(f"{current_thread().name} commit chunk {k // CHUNK_SIZE}")
             conn.commit()
@@ -101,9 +102,9 @@ def thread_load_write_test():
     with ThreadPoolExecutor(max_workers=NUM_THREAD_WORKER) as executor:
         for k in range(1, NUM_THREAD_WORKER+1):
             print(f"submit {k} thread")
-            executor.submit(write_to_table, k*NUM_ROW+1)
+            executor.submit(write_to_table)
 
 if __name__ == "__main__":
-    # create_table()
-    # thread_load_write_test()
-    fetch_data()
+    create_table()
+    thread_load_write_test()
+    #fetch_data()
