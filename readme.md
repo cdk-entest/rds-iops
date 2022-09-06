@@ -22,12 +22,17 @@ then run the schmea.sql to create table and index with intensive io pattern
 ## Experiment
 db.m6l.large 2vCPU 8GB 20GB GP2 
 
+![Screen Shot 2022-09-06 at 12 30 43](https://user-images.githubusercontent.com/20411077/188558643-98258fd0-c685-4945-b415-4caa9bfa7827.png)
+
+
 db.m6l.large 2vCPU 8GB provisioned 3000 IOPS and 100GB SSD 
+
 ![Screen Shot 2022-09-06 at 13 00 16](https://user-images.githubusercontent.com/20411077/188558305-1d9cbc7a-8816-47bb-a6d3-583a8a08d35b.png)
 
 ![Screen Shot 2022-09-06 at 12 59 58](https://user-images.githubusercontent.com/20411077/188558313-be48b64d-c885-493c-b48a-5b58bdcf6712.png)
 
 db.m5.4xlarge 16vCPU 64GB provisioned 3000 IOPS and 400GB SSD 
+
 ![Screen Shot 2022-09-06 at 13 03 05](https://user-images.githubusercontent.com/20411077/188558541-fa551243-5840-41d2-99c7-fafa3a2ec8d9.png)
 
 ![Screen Shot 2022-09-06 at 13 03 17](https://user-images.githubusercontent.com/20411077/188558550-23342ec9-a082-4219-b562-c6113caadddf.png)
