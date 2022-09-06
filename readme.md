@@ -1,7 +1,7 @@
 ## Introduction
 - iops and cost 
 - test and monitor iops 
-
+- load data.csv into a table
 
 ## Reference 
 [understanding burst mode](https://aws.amazon.com/blogs/database/understanding-burst-vs-baseline-performance-with-amazon-rds-and-gp2/)
@@ -12,5 +12,5 @@
 
 [cpu burstable ec2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/burstable-performance-instances.html)
 
-[data](wget https://aws-blogs-artifacts-public.s3.amazonaws.com/artifacts/DBBLOG-1922/sample-dataset.zip)
+[data](https://aws-blogs-artifacts-public.s3.amazonaws.com/artifacts/DBBLOG-1922/sample-dataset.zip)
 
